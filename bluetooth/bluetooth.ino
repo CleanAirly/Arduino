@@ -46,6 +46,7 @@ double Vref;
 double Vtemp;
 int valorPpm;
 
+int cont;
 
 void setup() {
    
@@ -120,7 +121,11 @@ void startAdvertising() {
   Serial.println(leerTemperatura());
   Serial.print("Concentracion (ppm): ");
   Serial.println(correcion());
-   BLEBeacon elBeacon( beaconUUID, correcion()+100, leerTemperatura(), 73 );
+ int aumento = 100;
+  if(cont % 15 == 0 ||cont % 10 == 0 ||cont % 11 == 0 ||cont % 12 == 0){
+    aumento = 500;
+  }
+   BLEBeacon elBeacon( beaconUUID, correcion()+aumento, leerTemperatura(), 73 );
    elBeacon.setManufacturer( 0x004c ); // aple id
    Bluefruit.Advertising.setBeacon( elBeacon );
 
@@ -144,13 +149,11 @@ void startAdvertising() {
 /**
  * The standard Arduino loop function used for repeating tasks.
  */
-namespace Loop {
-   int cont = 0;
-};
+
 // ....................................................
 void loop() {
 
-   using namespace Loop;
+ 
 
    cont++;
 
